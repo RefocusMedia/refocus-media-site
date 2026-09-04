@@ -935,10 +935,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .nav-pill{ transform:translate(-50%,-50%) translateY(14px) scale(0.97); }
   }
   @media (max-width: 720px){
-    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:96px; font-size:0.84rem; padding:0.75rem 0.45rem; }
+    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:96px; font-size:0.88rem; font-weight:600; padding:0.75rem 0.45rem; }
   }
   @media (max-width: 640px){
-    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:90px; font-size:0.8rem; padding:0.7rem 0.4rem; }
+    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:90px; font-size:0.85rem; font-weight:600; padding:0.7rem 0.4rem; }
     .packages-grid{ grid-template-columns:1fr; gap:1.4rem; max-width:100%; }
     .package-card{ padding:1rem 0.7rem; transform-origin:top center; }
     .package-card h3{ font-size:0.8rem; margin-bottom:0.8rem; }
@@ -946,7 +946,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .package-discount{ font-size:clamp(1.1rem, 4vw, 1.5rem); margin-top:1rem; padding-top:0.8rem; }
   }
   @media (max-width: 560px){
-    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:74px; font-size:0.72rem; padding:0.65rem 0.3rem; }
+    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:74px; font-size:0.76rem; font-weight:600; padding:0.65rem 0.3rem; }
   }
   @media (max-width: 600px){
     .form-row{ grid-template-columns:1fr; }
@@ -1167,7 +1167,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="copyright"><span class="copy-icon">©</span> 2026 Refocus Media LLC. All Rights Reserved</div>
     <div class="foot-links">
       <a href="https://drive.google.com/uc?export=download&id=1r-tgvPdirwkyQl0Wh--_RvrFY6MAN8LftUuo0e7LyOY" target="_blank" rel="noopener">Terms</a>
-      <a href="https://drive.google.com/uc?export=download&id=1ZmfjrXnHDuoqomOkr27mcxUUReOs5o0e3sgRdKnFXmc" target="_blank" rel="noopener">Prep List</a>
     </div>
   </div>
 </footer>
@@ -1211,6 +1210,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
+  // ---- Booking iframe — some embeddable platforms broadcast their real
+  // content height via postMessage specifically so the parent page can
+  // resize the iframe to match (since cross-origin content can't otherwise
+  // be measured). Worth listening for in case Aryeo's page does this —
+  // if it does, this will size the iframe exactly; if not, this simply
+  // never fires and the CSS-based height still applies as-is.
+  (function(){
+    var bookingIframe = document.querySelector('.booking-embed iframe');
+    if (!bookingIframe) return;
+    window.addEventListener('message', function(e){
+      if (!bookingIframe.src || e.source !== bookingIframe.contentWindow) return;
+      var data = e.data;
+      if (typeof data === 'string'){
+        try { data = JSON.parse(data); } catch (err){ return; }
+      }
+      if (!data || typeof data !== 'object') return;
+      var height = data.height || data.frameHeight || (data.type === 'resize' ? data.value : null);
+      if (height && !isNaN(height)){
+        bookingIframe.style.height = height + 'px';
+      }
+    });
+  })();
+
   // ---- Nav height, kept in sync so shades hang exactly below the nav -----
   function updateNavHeight(){
     var nav = document.querySelector('.site-nav');
@@ -1294,7 +1316,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // after a short delay — so the new panel is already covering the screen
     // before the old one starts retracting, avoiding a brief flash of the
     // hero showing through in between.
-    function setOpen(key){
+    function setOpen(key, skipHashUpdate){
       var previousKey = openKey;
       openKey = key;
       updateActiveStyling();
@@ -1316,7 +1338,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           prevEl.classList.remove('is-visible');
         }, closeDelay);
       }
+
+      // Keep the URL shareable/bookmarkable — reflects whichever panel is
+      // open without cluttering browser history on every click.
+      if (!skipHashUpdate){
+        history.replaceState(null, '', key ? ('#' + key) : (window.location.pathname + window.location.search));
+      }
     }
+
+    // If someone lands on a link like yoursite.com/#packages, open that
+    // panel automatically once the page has loaded.
+    var initialHash = window.location.hash.replace('#', '');
+    if (shadeKeys.indexOf(initialHash) !== -1){
+      setOpen(initialHash, true);
+    }
+    window.addEventListener('hashchange', function(){
+      var hashKey = window.location.hash.replace('#', '');
+      setOpen(shadeKeys.indexOf(hashKey) !== -1 ? hashKey : null, true);
+    });
 
     navPillItems.forEach(function(btn){
       var key = btn.dataset.shade;
