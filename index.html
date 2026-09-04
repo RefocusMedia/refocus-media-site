@@ -754,6 +754,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     border:0;
     background:#000000;
   }
+  @media (max-width: 640px){
+    .booking-embed iframe{ height:min(58vh, 500px); }
+  }
 
   /* CONTACT — form styling, used inside the Contact modal */
   .contact-form{
@@ -932,10 +935,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .nav-pill{ transform:translate(-50%,-50%) translateY(14px) scale(0.97); }
   }
   @media (max-width: 720px){
-    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:88px; font-size:0.78rem; padding:0.75rem 0.45rem; }
+    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:96px; font-size:0.84rem; padding:0.75rem 0.45rem; }
   }
   @media (max-width: 640px){
-    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:80px; font-size:0.75rem; padding:0.7rem 0.4rem; }
+    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:90px; font-size:0.8rem; padding:0.7rem 0.4rem; }
     .packages-grid{ grid-template-columns:1fr; gap:1.4rem; max-width:100%; }
     .package-card{ padding:1rem 0.7rem; transform-origin:top center; }
     .package-card h3{ font-size:0.8rem; margin-bottom:0.8rem; }
@@ -943,7 +946,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .package-discount{ font-size:clamp(1.1rem, 4vw, 1.5rem); margin-top:1rem; padding-top:0.8rem; }
   }
   @media (max-width: 560px){
-    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:66px; font-size:0.66rem; padding:0.65rem 0.3rem; }
+    .nav-pill-item, .nav-pill-item-wrap .nav-pill-item{ width:74px; font-size:0.72rem; padding:0.65rem 0.3rem; }
   }
   @media (max-width: 600px){
     .form-row{ grid-template-columns:1fr; }
