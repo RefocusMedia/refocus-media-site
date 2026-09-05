@@ -1216,28 +1216,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-  // ---- Booking iframe — some embeddable platforms broadcast their real
-  // content height via postMessage specifically so the parent page can
-  // resize the iframe to match (since cross-origin content can't otherwise
-  // be measured). Worth listening for in case Aryeo's page does this —
-  // if it does, this will size the iframe exactly; if not, this simply
-  // never fires and the CSS-based height still applies as-is.
-  (function(){
-    var bookingIframe = document.querySelector('.booking-embed iframe');
-    if (!bookingIframe) return;
-    window.addEventListener('message', function(e){
-      if (!bookingIframe.src || e.source !== bookingIframe.contentWindow) return;
-      var data = e.data;
-      if (typeof data === 'string'){
-        try { data = JSON.parse(data); } catch (err){ return; }
-      }
-      if (!data || typeof data !== 'object') return;
-      var height = data.height || data.frameHeight || (data.type === 'resize' ? data.value : null);
-      if (height && !isNaN(height)){
-        bookingIframe.style.height = height + 'px';
-      }
-    });
-  })();
 
   // ---- Nav height, kept in sync so shades hang exactly below the nav -----
   function updateNavHeight(){
