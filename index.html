@@ -739,6 +739,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   /* BOOKING embed */
   .booking-embed{
+    position:relative;
     margin-top: 1.5rem;
     width: 100%;
     min-height: 600px;
@@ -753,6 +754,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     height:min(75vh, 700px); /* fallback before JS computes the exact fit */
     border:0;
     background:#000000;
+  }
+  .booking-fullscreen-btn{
+    position:absolute;
+    top:0.75rem; right:0.75rem;
+    z-index:2;
+    width:36px; height:36px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    background:rgba(0,0,0,0.55);
+    border:1px solid var(--hairline);
+    color:var(--ink);
+    cursor:pointer;
+    transition: background-color 0.15s ease;
+  }
+  .booking-fullscreen-btn:hover{
+    background:rgba(0,0,0,0.8);
   }
   @media (max-width: 640px){
     .booking-embed{ min-height:0; }
@@ -1155,6 +1172,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h2>Reserve your shoot</h2>
     <div class="booking-embed">
       <iframe src="https://media.refocus-media.com/portal" title="Booking" loading="lazy"></iframe>
+      <button class="booking-fullscreen-btn" type="button" aria-label="View fullscreen">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <polyline points="9 21 3 21 3 15"></polyline>
+          <line x1="21" y1="3" x2="14" y2="10"></line>
+          <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+      </button>
     </div>
   </div>
 </div>
@@ -1312,6 +1337,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (key === 'booking' && window.fitBookingIframe) window.fitBookingIframe();
         el.style.maxHeight = heightFor(el) + 'px';
         el.classList.add('is-visible');
+
+        // Booking's height depends on a live layout measurement rather than
+        // just content scrollHeight, which can occasionally run a beat
+        // before everything (fonts, nav height) has fully settled — most
+        // likely right after a fresh page load. This re-measures shortly
+        // after opening and corrects the height if it was off.
+        if (key === 'booking' && window.fitBookingIframe){
+          window.setTimeout(function(){
+            if (openKey !== 'booking') return;
+            window.fitBookingIframe();
+            el.style.maxHeight = heightFor(el) + 'px';
+          }, 200);
+        }
       }
 
       if (previousKey && previousKey !== key){
@@ -1453,6 +1491,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     fit();
   });
+
+  // ---- Booking fullscreen button — shown unconditionally for now (no
+  // feature-detection fallback yet) so support can be tested directly on
+  // real devices, particularly iPhone, before deciding whether to hide it
+  // on browsers that don't support fullscreening non-video elements.
+  (function(){
+    var btn = document.querySelector('.booking-fullscreen-btn');
+    var iframe = document.querySelector('.booking-embed iframe');
+    if (!btn || !iframe) return;
+
+    btn.addEventListener('click', function(){
+      var request = iframe.requestFullscreen
+        || iframe.webkitRequestFullscreen
+        || iframe.webkitEnterFullscreen // Safari's older, video-only fallback
+        || iframe.mozRequestFullScreen
+        || iframe.msRequestFullscreen;
+      if (request){
+        request.call(iframe);
+      }
+    });
+  })();
 
   // ---- Booking iframe sizing — fills the rest of the browser window's
   // height below the heading, leaving the shade's own bottom padding intact
