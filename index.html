@@ -1341,14 +1341,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         // Booking's height depends on a live layout measurement rather than
         // just content scrollHeight, which can occasionally run a beat
         // before everything (fonts, nav height) has fully settled — most
-        // likely right after a fresh page load. This re-measures shortly
+        // likely right after a fresh page load. Re-measures twice shortly
         // after opening and corrects the height if it was off.
         if (key === 'booking' && window.fitBookingIframe){
-          window.setTimeout(function(){
-            if (openKey !== 'booking') return;
-            window.fitBookingIframe();
-            el.style.maxHeight = heightFor(el) + 'px';
-          }, 200);
+          [300, 800].forEach(function(delay){
+            window.setTimeout(function(){
+              if (openKey !== 'booking') return;
+              window.fitBookingIframe();
+              el.style.maxHeight = heightFor(el) + 'px';
+            }, delay);
+          });
         }
       }
 
@@ -1370,10 +1372,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     // If someone lands on a link like yoursite.com/#packages, open that
-    // panel automatically once the page has loaded.
-    var initialHash = window.location.hash.replace('#', '');
-    if (shadeKeys.indexOf(initialHash) !== -1){
-      setOpen(initialHash, true);
+    // panel automatically. Deferred until window 'load' (not immediately)
+    // since a direct reload straight into a hash-linked panel is a much
+    // earlier moment than a normal click — fonts and layout may not have
+    // settled yet, which specifically affects Booking's live-measured
+    // height.
+    function openInitialHash(){
+      var initialHash = window.location.hash.replace('#', '');
+      if (shadeKeys.indexOf(initialHash) !== -1){
+        setOpen(initialHash, true);
+      }
+    }
+    if (document.readyState === 'complete'){
+      openInitialHash();
+    } else {
+      window.addEventListener('load', openInitialHash);
     }
     window.addEventListener('hashchange', function(){
       var hashKey = window.location.hash.replace('#', '');
@@ -1492,19 +1505,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     fit();
   });
 
-  // ---- Booking fullscreen button — shown unconditionally for now (no
-  // feature-detection fallback yet) so support can be tested directly on
-  // real devices, particularly iPhone, before deciding whether to hide it
-  // on browsers that don't support fullscreening non-video elements.
+  // ---- Booking fullscreen button — hidden entirely on browsers that don't
+  // support fullscreening a non-video element (confirmed: iOS Safari does
+  // not), rather than showing a button that would silently do nothing.
   (function(){
     var btn = document.querySelector('.booking-fullscreen-btn');
     var iframe = document.querySelector('.booking-embed iframe');
     if (!btn || !iframe) return;
 
+    var supported = !!(
+      document.fullscreenEnabled ||
+      document.webkitFullscreenEnabled ||
+      document.mozFullScreenEnabled ||
+      document.msFullscreenEnabled
+    ) && !!(
+      iframe.requestFullscreen ||
+      iframe.webkitRequestFullscreen ||
+      iframe.mozRequestFullScreen ||
+      iframe.msRequestFullscreen
+    );
+
+    if (!supported){
+      btn.style.display = 'none';
+      return;
+    }
+
     btn.addEventListener('click', function(){
       var request = iframe.requestFullscreen
         || iframe.webkitRequestFullscreen
-        || iframe.webkitEnterFullscreen // Safari's older, video-only fallback
         || iframe.mozRequestFullScreen
         || iframe.msRequestFullscreen;
       if (request){
