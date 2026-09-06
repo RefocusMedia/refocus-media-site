@@ -853,8 +853,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     cursor:pointer;
   }
   .submit-btn{ flex:none; white-space:nowrap; }
+  .form-status{
+    font-size:0.82rem;
+    line-height:1.4;
+    min-height:0;
+  }
+  .form-status.is-success{ color:#7dd88a; margin-top:0.9rem; }
+  .form-status.is-error{ color:#e28080; margin-top:0.9rem; }
 
-  /* Contact modal */
   /* PHOTO LIGHTBOX — pop-out view for gallery photos */
   .photo-lightbox{
     position:fixed;
@@ -971,6 +977,66 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     color:var(--ink);
   }
 
+  /* TERMS modal — same pattern as contact modal, sized larger for reading a document */
+  .terms-modal{
+    position:fixed; inset:0; z-index:999;
+    display:flex; align-items:center; justify-content:center;
+    padding:1.5rem;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.2s ease;
+  }
+  .terms-modal.is-open{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .terms-modal-backdrop{
+    position:absolute; inset:0;
+    background:rgba(0,0,0,0.72);
+    -webkit-backdrop-filter:blur(6px);
+    backdrop-filter:blur(6px);
+  }
+  .terms-modal-panel{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:900px;
+    height:88vh;
+    background:rgba(8,8,8,0.95);
+    border:1px solid var(--hairline);
+    border-radius:20px;
+    padding: 1rem;
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.2s ease;
+  }
+  .terms-modal.is-open .terms-modal-panel{
+    transform: translateY(0) scale(1);
+  }
+  .terms-modal-panel iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    border-radius:12px;
+    background:#fff;
+  }
+  .terms-modal-close{
+    position:absolute; top:0.75rem; right:0.75rem;
+    z-index:2;
+    width:32px; height:32px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(20,20,20,0.85);
+    border:1px solid var(--hairline);
+    color:var(--ink);
+    font-size:1.3rem;
+    line-height:1;
+    cursor:pointer;
+    transition: background-color 0.15s ease;
+  }
+  .terms-modal-close:hover{
+    background:rgba(20,20,20,1);
+  }
+
   /* Site footer */
   .site-footer{
     position:fixed;
@@ -1001,13 +1067,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     display:flex;
     gap:1.4rem;
   }
-  .foot-links a{
+  .foot-links a,
+  .foot-link-btn{
     color:var(--ink-muted);
     text-decoration:none;
     border-bottom:1px solid transparent;
     transition:color 0.2s ease, border-color 0.2s ease;
+    background:none;
+    border-top:none; border-left:none; border-right:none;
+    padding:0;
+    font: inherit;
+    cursor:pointer;
   }
-  .foot-links a:hover{
+  .foot-links a:hover,
+  .foot-link-btn:hover{
     color:var(--ink);
     border-color:var(--hairline);
   }
@@ -1262,7 +1335,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="site-footer-inner">
     <div class="copyright"><span class="copy-icon">©</span> 2026 Refocus Media LLC. All Rights Reserved</div>
     <div class="foot-links">
-      <a href="https://drive.google.com/uc?export=download&id=1r-tgvPdirwkyQl0Wh--_RvrFY6MAN8LftUuo0e7LyOY" target="_blank" rel="noopener">Terms</a>
+      <button type="button" id="termsLinkBtn" class="foot-link-btn">Terms</button>
     </div>
   </div>
 </footer>
@@ -1274,6 +1347,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <button class="lightbox-arrow lightbox-arrow-next" type="button" aria-label="Next photo">&#8250;</button>
 </div>
 
+<div class="terms-modal" id="termsModal" aria-hidden="true">
+  <div class="terms-modal-backdrop" data-terms-close></div>
+  <div class="terms-modal-panel" role="dialog" aria-modal="true">
+    <button class="terms-modal-close" type="button" aria-label="Close" data-terms-close>&times;</button>
+    <iframe src="https://docs.google.com/document/d/e/2PACX-1vTZZfXmQpXkbGoNHaGoU19wfhoiotwssUTSJo0MqJ7Mpmy-CMij8vCKS7RRuQdDOjsHv_5qE07npdTY/pub?embedded=true" title="Terms"></iframe>
+  </div>
+</div>
+
 <div class="contact-modal" id="contactModal" aria-hidden="true">
   <div class="contact-modal-backdrop" data-modal-close></div>
   <div class="contact-modal-panel" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
@@ -1283,19 +1364,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <form class="contact-form" id="contactForm" novalidate>
       <div class="form-row">
-        <label class="field" id="field-name">Name
+        <label class="field" id="field-firstname">First Name
           <span class="field-error">Required</span>
-          <input type="text" name="name" id="name" required>
+          <input type="text" name="firstname" id="firstname" required>
         </label>
+        <label class="field" id="field-lastname">Last Name
+          <span class="field-error">Required</span>
+          <input type="text" name="lastname" id="lastname" required>
+        </label>
+      </div>
+      <div class="form-row">
         <label class="field" id="field-email">Email
           <span class="field-error">Required</span>
           <input type="email" name="email" id="email" required>
         </label>
+        <label class="field" id="field-phone">Phone
+          <span class="field-error">Required</span>
+          <input type="tel" name="phone" id="phone" required>
+        </label>
       </div>
-      <label class="field" id="field-phone">Phone
-        <span class="field-error">Required</span>
-        <input type="tel" name="phone" id="phone" required>
-      </label>
       <label class="field" id="field-message">Message
         <span class="field-error">Required</span>
         <textarea name="message" id="message" rows="3" required></textarea>
@@ -1308,9 +1395,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </label>
         <button type="submit" class="glass-pill submit-btn is-incomplete" id="sendBtn">Send Message</button>
       </div>
+      <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
     </form>
   </div>
 </div>
+
+<!-- Hidden Mailchimp submission target — a real form POST (not fetch) aimed
+     at an invisible iframe, since Mailchimp's endpoint doesn't support
+     cross-origin fetch requests. This never navigates the visible page. -->
+<iframe name="mc-hidden-iframe" id="mcHiddenIframe" style="display:none;" title="Newsletter signup"></iframe>
+<form id="mcHiddenForm" action="https://refocus-media.us9.list-manage.com/subscribe/post?u=57832e3dfbadc1209a70ce95c&id=ab4a82543f&f_id=003a53e1f0" method="post" target="mc-hidden-iframe" style="display:none;">
+  <input type="email" name="EMAIL" id="mcEmail">
+  <input type="text" name="FNAME" id="mcFname">
+  <input type="text" name="LNAME" id="mcLname">
+  <input type="text" name="PHONE" id="mcPhone">
+</form>
 
 <script>
 
@@ -1529,6 +1628,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
   })();
+
+  // ---- Terms modal — opened from the "Terms" link in the footer ----
+  var termsModal = document.getElementById('termsModal');
+  var termsLinkBtn = document.getElementById('termsLinkBtn');
+  function openTermsModal(){
+    if (!termsModal) return;
+    termsModal.classList.add('is-open');
+    termsModal.setAttribute('aria-hidden', 'false');
+  }
+  function closeTermsModal(){
+    if (!termsModal) return;
+    termsModal.classList.remove('is-open');
+    termsModal.setAttribute('aria-hidden', 'true');
+  }
+  if (termsLinkBtn){
+    termsLinkBtn.addEventListener('click', openTermsModal);
+  }
+  document.querySelectorAll('[data-terms-close]').forEach(function(el){
+    el.addEventListener('click', closeTermsModal);
+  });
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeTermsModal();
+  });
 
   // ---- Contact modal — opened from the "Contact" item in the nav pill ----
   var contactModal = document.getElementById('contactModal');
@@ -1985,17 +2107,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   });
 
-  // ---- Contact form — live validation state + on-submit required/format errors.
+  // ---- Contact form — live validation, Web3Forms submission (email
+  // notification), and conditional Mailchimp signup (hidden iframe form,
+  // since Mailchimp's endpoint doesn't support cross-origin fetch).
   var form = document.getElementById('contactForm');
   var sendBtn = document.getElementById('sendBtn');
-  var nameInput = document.getElementById('name');
+  var firstNameInput = document.getElementById('firstname');
+  var lastNameInput = document.getElementById('lastname');
   var emailInput = document.getElementById('email');
   var phoneInput = document.getElementById('phone');
   var messageInput = document.getElementById('message');
   var newsletterCheckbox = document.getElementById('newsletter');
+  var formStatus = document.getElementById('formStatus');
+
+  var WEB3FORMS_ACCESS_KEY = 'e711c484-2e72-4230-b554-460c6782b668';
 
   var requiredFields = [
-    { input: nameInput, wrap: document.getElementById('field-name') },
+    { input: firstNameInput, wrap: document.getElementById('field-firstname') },
+    { input: lastNameInput, wrap: document.getElementById('field-lastname') },
     { input: emailInput, wrap: document.getElementById('field-email') },
     { input: phoneInput, wrap: document.getElementById('field-phone') },
     { input: messageInput, wrap: document.getElementById('field-message') }
@@ -2007,7 +2136,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   function formIsComplete(){
     return (
-      nameInput.value.trim().length > 0 &&
+      firstNameInput.value.trim().length > 0 &&
+      lastNameInput.value.trim().length > 0 &&
       isValidEmail(emailInput.value) &&
       phoneInput.value.trim().length > 0 &&
       messageInput.value.trim().length > 0
@@ -2028,6 +2158,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (errorEl) errorEl.textContent = message;
   }
 
+  function setStatus(message, type){
+    if (!formStatus) return;
+    formStatus.textContent = message;
+    formStatus.className = 'form-status' + (type ? ' is-' + type : '');
+  }
+
   requiredFields.forEach(function(f){
     f.input.addEventListener('input', function(){
       clearFieldError(f.wrap);
@@ -2035,15 +2171,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   });
 
+  // Submits name/email/phone to Mailchimp via a real (non-fetch) form POST
+  // targeted at a hidden iframe, so the visible page never navigates away.
+  function submitToMailchimp(){
+    document.getElementById('mcEmail').value = emailInput.value.trim();
+    document.getElementById('mcFname').value = firstNameInput.value.trim();
+    document.getElementById('mcLname').value = lastNameInput.value.trim();
+    document.getElementById('mcPhone').value = phoneInput.value.trim();
+    document.getElementById('mcHiddenForm').submit();
+  }
+
   if (form){
     form.addEventListener('submit', function(e){
       e.preventDefault();
 
       var allValid = true;
       requiredFields.forEach(function(f){ clearFieldError(f.wrap); });
+      setStatus('', null);
 
-      if (nameInput.value.trim().length === 0){
-        setFieldError(document.getElementById('field-name'), 'Required');
+      if (firstNameInput.value.trim().length === 0){
+        setFieldError(document.getElementById('field-firstname'), 'Required');
+        allValid = false;
+      }
+      if (lastNameInput.value.trim().length === 0){
+        setFieldError(document.getElementById('field-lastname'), 'Required');
         allValid = false;
       }
       if (emailInput.value.trim().length === 0){
@@ -2064,16 +2215,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       if (!allValid) return;
 
-      // All fields valid. If the newsletter checkbox is ticked, this is where
-      // name / email / phone would be forwarded to Mailchimp (e.g. via a
-      // Mailchimp embedded-form endpoint or a small serverless function —
-      // this static page can't call the Mailchimp API directly/securely).
-      if (newsletterCheckbox.checked){
-        // TODO: wire up Mailchimp submission here.
-      }
+      var originalBtnText = sendBtn.textContent;
+      sendBtn.textContent = 'Sending...';
+      sendBtn.disabled = true;
 
-      form.reset();
-      refreshSendState();
+      var formData = new FormData();
+      formData.append('access_key', WEB3FORMS_ACCESS_KEY);
+      formData.append('name', firstNameInput.value.trim() + ' ' + lastNameInput.value.trim());
+      formData.append('email', emailInput.value.trim());
+      formData.append('phone', phoneInput.value.trim());
+      formData.append('message', messageInput.value.trim());
+      formData.append('subject', 'New contact form submission — Refocus Media');
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      })
+        .then(function(response){ return response.json().then(function(data){ return { ok: response.ok, data: data }; }); })
+        .then(function(result){
+          if (result.ok){
+            if (newsletterCheckbox.checked) submitToMailchimp();
+            setStatus('Thanks — your message has been sent. We\'ll be in touch soon.', 'success');
+            form.reset();
+            refreshSendState();
+          } else {
+            setStatus('Something went wrong sending your message. Please try again, or reach out directly.', 'error');
+          }
+        })
+        .catch(function(){
+          setStatus('Something went wrong sending your message. Please try again, or reach out directly.', 'error');
+        })
+        .finally(function(){
+          sendBtn.textContent = originalBtnText;
+          sendBtn.disabled = false;
+        });
     });
   }
 
