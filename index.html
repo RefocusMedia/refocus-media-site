@@ -1380,6 +1380,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <form class="contact-form" id="contactForm" novalidate>
       <div class="form-row name-row">
+        <label class="field" id="field-firstname">First Name
           <span class="field-error">Required</span>
           <input type="text" name="firstname" id="firstname" required>
         </label>
@@ -1655,7 +1656,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // than fighting it.
   var termsWrap = document.getElementById('termsIframeWrap');
   var termsIframe = termsWrap ? termsWrap.querySelector('iframe') : null;
-  var TERMS_NATIVE_WIDTH = 1100;
+  var TERMS_NATIVE_WIDTH = 850;
   function fitTermsIframe(){
     if (!termsWrap || !termsIframe) return;
     var availW = termsWrap.clientWidth;
