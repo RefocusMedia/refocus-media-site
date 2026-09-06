@@ -626,6 +626,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .embed-wrap iframe{
     position:absolute; inset:0;
     width:100%; height:100%;
+    max-width:100%; max-height:100%;
     border:0; display:block;
   }
   /* Zillow 3D Home Tour — native size raised to 960x540 (same 16:9, 1.5x the
@@ -646,16 +647,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       gap:0.85rem;
       text-decoration:none;
       color:var(--ink);
-      background: linear-gradient(155deg,#1a1a1a,#060606);
+      background:#060606; /* fallback while the image loads */
+      overflow:hidden;
       font-size:0.85rem;
       letter-spacing:0.04em;
+    }
+    #panel-tour360 .mobile-tour-link::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image:url('images/zillow-preview.jpg');
+      background-size:cover;
+      background-position:center;
+      filter: blur(4px) brightness(0.45);
+      transform: scale(1.08); /* hides the blur's soft edge from peeking past the box */
+      z-index:0;
+    }
+    #panel-tour360 .mobile-tour-link > *{
+      position:relative;
+      z-index:1;
     }
     .mobile-tour-play{
       width:56px; height:56px;
       border-radius:50%;
       display:flex; align-items:center; justify-content:center;
-      background:rgba(255,255,255,0.08);
-      border:1px solid var(--hairline);
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.3);
       font-size:1.2rem;
       padding-left:3px; /* optically center the play triangle */
     }
