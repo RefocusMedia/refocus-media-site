@@ -635,13 +635,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     position:absolute;
     top:50%; left:50%;
     width:960px; height:540px;
+    max-width:none; max-height:none;
     border:0;
     transform-origin:center center;
   }
   .mobile-tour-link{ display:none; }
   @media (max-width: 640px){
-    #panel-tour360 iframe.fixed-embed-iframe{ display:none; }
-    #panel-tour360 .mobile-tour-link{
+    #panel-tour360 iframe.fixed-embed-iframe,
+    #panel-itour iframe{ display:none; }
+    .mobile-tour-link{
       position:absolute; inset:0;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       gap:0.85rem;
@@ -651,19 +653,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       overflow:hidden;
       font-size:0.85rem;
       letter-spacing:0.04em;
+      text-align:center;
+      padding:0 1.5rem;
     }
-    #panel-tour360 .mobile-tour-link::before{
+    .mobile-tour-link::before{
       content:"";
       position:absolute;
       inset:0;
-      background-image:url('images/zillow-preview.jpg');
       background-size:cover;
       background-position:center;
       filter: blur(4px) brightness(0.45);
       transform: scale(1.08); /* hides the blur's soft edge from peeking past the box */
       z-index:0;
     }
-    #panel-tour360 .mobile-tour-link > *{
+    #panel-tour360 .mobile-tour-link::before{
+      background-image:url('images/zillow-preview.jpg');
+    }
+    .mobile-itour-link::before{
+      background-image:url('images/interactive-preview.jpg');
+    }
+    .mobile-tour-link > *{
       position:relative;
       z-index:1;
     }
@@ -673,8 +682,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       display:flex; align-items:center; justify-content:center;
       background:rgba(255,255,255,0.12);
       border:1px solid rgba(255,255,255,0.3);
-      font-size:1.2rem;
-      padding-left:3px; /* optically center the play triangle */
+      padding-left:2px; /* optically center the play triangle */
     }
   }
 
@@ -1294,7 +1302,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="embed-wrap">
             <iframe src="https://www.zillow.com/view-imx/397b0911-65fb-4d8a-886c-17a1071c8070?setAttribution=mls&amp;wl=true&amp;initialViewType=pano&amp;utm_source=dashboard" width="960" height="540" frameborder="0" allowfullscreen class="fixed-embed-iframe" title="Zillow 3D Home Tour"></iframe>
             <a class="mobile-tour-link" href="https://www.zillow.com/view-imx/397b0911-65fb-4d8a-886c-17a1071c8070?setAttribution=mls&amp;wl=true&amp;initialViewType=pano&amp;utm_source=dashboard" target="_blank" rel="noopener">
-              <span class="mobile-tour-play">&#9658;</span>
+              <span class="mobile-tour-play"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
               <span>Tap to view the 3D Home Tour</span>
             </a>
           </div>
@@ -1303,6 +1311,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="gallery-panel" id="panel-itour">
           <div class="embed-wrap">
             <iframe src="https://unbranded.visithome.ai/6JdL5oo2ZN6WpksBJwHWvZ?mu=ft&amp;t=1780018359" loading="lazy" allowfullscreen title="Interactive Floor Plan Tour"></iframe>
+            <a class="mobile-tour-link mobile-itour-link" href="https://unbranded.visithome.ai/6JdL5oo2ZN6WpksBJwHWvZ?mu=ft&amp;t=1780018359" target="_blank" rel="noopener">
+              <span class="mobile-tour-play"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+              <span>Tap to view the Interactive Floor Plan</span>
+            </a>
           </div>
         </div>
 
