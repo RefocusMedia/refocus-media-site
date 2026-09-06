@@ -801,6 +801,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .field input,
   .field textarea{
+    width:100%;
     font-family:'Roboto', sans-serif;
     font-size:0.88rem;
     text-transform:none;
@@ -1123,6 +1124,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   @media (max-width: 600px){
     .form-row{ grid-template-columns:1fr; }
     .form-row.name-row{ grid-template-columns:1fr 1fr; gap:0.6rem; }
+    .form-row.name-row .field{ min-width:0; }
     .form-footer-row{ align-items:flex-start; }
     .submit-btn{ width:100%; }
     .newsletter-check{ max-width:none; }
@@ -1656,7 +1658,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // than fighting it.
   var termsWrap = document.getElementById('termsIframeWrap');
   var termsIframe = termsWrap ? termsWrap.querySelector('iframe') : null;
-  var TERMS_NATIVE_WIDTH = 850;
+  var TERMS_NATIVE_WIDTH = 825;
   function fitTermsIframe(){
     if (!termsWrap || !termsIframe) return;
     var availW = termsWrap.clientWidth;
