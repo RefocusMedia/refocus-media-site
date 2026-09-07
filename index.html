@@ -10,7 +10,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="We deliver top-tier photo and video solutions for impactful marketing. Maximize your brand's visual appeal and leave a lasting impression with our professional and results-driven media solutions.">
 <title>Refocus Media — Real Estate Photography</title>
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -1697,6 +1702,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
     btn.addEventListener('click', function(){
       pinned = !pinned;
+      if (!pinned) hovering = false; // force-close even though the mouse is still over the button
       refresh();
     });
     document.addEventListener('click', function(e){
