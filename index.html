@@ -1517,15 +1517,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
-<!-- Hidden Mailchimp submission target — a real form POST (not fetch) aimed
-     at an invisible iframe, since Mailchimp's endpoint doesn't support
+<!-- Hidden Brevo submission target — a real form POST (not fetch) aimed
+     at an invisible iframe, since Brevo's endpoint doesn't support
      cross-origin fetch requests. This never navigates the visible page. -->
-<iframe name="mc-hidden-iframe" id="mcHiddenIframe" style="display:none;" title="Newsletter signup"></iframe>
-<form id="mcHiddenForm" action="https://refocus-media.us9.list-manage.com/subscribe/post?u=57832e3dfbadc1209a70ce95c&id=ab4a82543f&f_id=003a53e1f0" method="post" target="mc-hidden-iframe" style="display:none;">
-  <input type="email" name="EMAIL" id="mcEmail">
-  <input type="text" name="FNAME" id="mcFname">
-  <input type="text" name="LNAME" id="mcLname">
-  <input type="text" name="PHONE" id="mcPhone">
+<iframe name="brevo-hidden-iframe" id="brevoHiddenIframe" style="display:none;" title="Newsletter signup"></iframe>
+<form id="brevoHiddenForm" action="https://8d3b31ef.sibforms.com/serve/MUIFAIFcWblg6yWJYtuKnicntnTskPawItJzvz6BoTN72gTEazSubKmcNsZqmyRQGzXkjFzi6Hui79VUi_URiYZuaDcpDifmS9Ix4LNB95ck4XuNE4TzzLCNn1r1qCXJO48_SePhhCQ4y3vZnnXyjZf0bKatGL01B-4OjKoOA4CkDclRLNDFC87pAt5aukDTFIft9xP6KWTIxfKlag==" method="post" target="brevo-hidden-iframe" style="display:none;">
+  <input type="text" name="FIRSTNAME" id="brevoFname">
+  <input type="text" name="LASTNAME" id="brevoLname">
+  <input type="email" name="EMAIL" id="brevoEmail">
+  <select name="SMS__COUNTRY_CODE" id="brevoSmsCountry">
+    <option value="+1">+1 US</option>
+  </select>
+  <input type="text" name="SMS" id="brevoSms">
+  <!-- Honeypot: left blank on purpose — Brevo's own anti-spam check -->
+  <input type="text" name="email_address_check" value="">
+  <input type="hidden" name="locale" value="en">
 </form>
 
 <script>
@@ -2247,8 +2253,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   });
 
   // ---- Contact form — live validation, Web3Forms submission (email
-  // notification), and conditional Mailchimp signup (hidden iframe form,
-  // since Mailchimp's endpoint doesn't support cross-origin fetch).
+  // notification), and conditional Brevo signup (hidden iframe form,
+  // since Brevo's endpoint doesn't support cross-origin fetch).
   var form = document.getElementById('contactForm');
   var sendBtn = document.getElementById('sendBtn');
   var firstNameInput = document.getElementById('firstname');
@@ -2310,14 +2316,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   });
 
-  // Submits name/email/phone to Mailchimp via a real (non-fetch) form POST
+  // Submits name/email/phone to Brevo via a real (non-fetch) form POST
   // targeted at a hidden iframe, so the visible page never navigates away.
-  function submitToMailchimp(){
-    document.getElementById('mcEmail').value = emailInput.value.trim();
-    document.getElementById('mcFname').value = firstNameInput.value.trim();
-    document.getElementById('mcLname').value = lastNameInput.value.trim();
-    document.getElementById('mcPhone').value = phoneInput.value.trim();
-    document.getElementById('mcHiddenForm').submit();
+  // Country code is hardcoded to US (+1) since our form has no separate
+  // country selector; the phone digits are stripped of any formatting
+  // characters, since Brevo's SMS field requires digits only.
+  function submitToBrevo(){
+    document.getElementById('brevoFname').value = firstNameInput.value.trim();
+    document.getElementById('brevoLname').value = lastNameInput.value.trim();
+    document.getElementById('brevoEmail').value = emailInput.value.trim();
+    document.getElementById('brevoSms').value = phoneInput.value.replace(/\D/g, '');
+    document.getElementById('brevoHiddenForm').submit();
   }
 
   if (form){
@@ -2373,7 +2382,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         .then(function(response){ return response.json().then(function(data){ return { ok: response.ok, data: data }; }); })
         .then(function(result){
           if (result.ok){
-            if (newsletterCheckbox.checked) submitToMailchimp();
+            if (newsletterCheckbox.checked) submitToBrevo();
             setStatus('Thanks — your message has been sent. We\'ll be in touch soon.', 'success');
             form.reset();
             refreshSendState();
