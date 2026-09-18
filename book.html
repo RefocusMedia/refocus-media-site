@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Shoot — Refocus Media</title>
+
+<link rel="manifest" href="manifest-booking.json">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+<meta name="theme-color" content="#050505">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Book a Shoot">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html, body{
+    height:100%;
+    background:#050505;
+    overflow:hidden;
+  }
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Roboto', sans-serif;
+  }
+
+  .intro-mark{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    text-transform:uppercase;
+    font-weight:700;
+    color:#f4f4f5;
+    line-height:1.1;
+    font-size:clamp(2.75rem, 9vw, 6.5rem);
+  }
+  .intro-refocus{
+    display:inline-block;
+    filter: blur(24px);
+    opacity:0.3;
+    animation: mark-focus-in 1.1s ease-out forwards;
+  }
+  .intro-media-clip{
+    display:block;
+    overflow:hidden;
+    line-height:1.15;
+  }
+  .intro-media-clip em{
+    display:inline-block;
+    color:#9a9a9e;
+    font-style:normal;
+    font-weight:300;
+    font-size:0.72em;
+    transform: translateY(-100%);
+    opacity:0;
+    animation: mark-media-drop 0.5s cubic-bezier(.22,.85,.32,1) forwards;
+    animation-delay: 0.9s;
+  }
+  @keyframes mark-focus-in{
+    0%{ filter: blur(9px); opacity:0.4; }
+    100%{ filter: blur(0); opacity:1; }
+  }
+  @keyframes mark-media-drop{
+    0%{ transform:translateY(-100%); opacity:0; }
+    55%{ opacity:1; }
+    100%{ transform:translateY(0); opacity:1; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .intro-refocus{ animation:none; filter:blur(0); opacity:1; }
+    .intro-media-clip em{ animation:none; transform:translateY(0); opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="intro-mark">
+    <span class="intro-refocus">Refocus</span>
+    <span class="intro-media-clip"><em>Media</em></span>
+  </div>
+
+  <script>
+    // Plays the splash (matches the main site's entrance timing), then
+    // forwards to the real booking form. Using replace() so this launcher
+    // page doesn't sit in browser history — pressing "back" from the
+    // booking form won't bounce someone back to this splash.
+    window.setTimeout(function(){
+      window.location.replace('https://media.refocus-media.com/order');
+    }, 2300);
+  </script>
+
+</body>
+</html>
