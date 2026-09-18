@@ -75,9 +75,38 @@
     100%{ transform:translateY(0); opacity:1; }
   }
 
+  .continue-btn{
+    position:absolute;
+    bottom:12%;
+    left:50%;
+    transform:translateX(-50%);
+    opacity:0;
+    animation: fade-in-btn 0.4s ease forwards;
+    animation-delay: 1.9s;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0.9rem 2rem;
+    border-radius:999px;
+    border:1px solid rgba(244,244,245,0.25);
+    background:rgba(255,255,255,0.06);
+    color:#f4f4f5;
+    font-family:'Roboto', sans-serif;
+    font-size:0.95rem;
+    letter-spacing:0.03em;
+    text-decoration:none;
+    cursor:pointer;
+  }
+  .continue-btn:hover{ background:rgba(255,255,255,0.12); }
+  @keyframes fade-in-btn{
+    0%{ opacity:0; transform:translateX(-50%) translateY(8px); }
+    100%{ opacity:1; transform:translateX(-50%) translateY(0); }
+  }
+
   @media (prefers-reduced-motion: reduce){
     .intro-refocus{ animation:none; filter:blur(0); opacity:1; }
     .intro-media-clip em{ animation:none; transform:translateY(0); opacity:1; }
+    .continue-btn{ animation:none; opacity:1; }
   }
 </style>
 </head>
@@ -88,15 +117,7 @@
     <span class="intro-media-clip"><em>Media</em></span>
   </div>
 
-  <script>
-    // Plays the splash (matches the main site's entrance timing), then
-    // forwards to the real booking form. Using replace() so this launcher
-    // page doesn't sit in browser history — pressing "back" from the
-    // booking form won't bounce someone back to this splash.
-    window.setTimeout(function(){
-      window.location.replace('https://media.refocus-media.com/order');
-    }, 2300);
-  </script>
+  <a class="continue-btn" href="https://media.refocus-media.com/order">Continue to Booking →</a>
 
 </body>
 </html>
