@@ -10,13 +10,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="We deliver top-tier photo and video solutions for impactful marketing. Maximize your brand's visual appeal and leave a lasting impression with our professional and results-driven media solutions.">
+<meta name="description" content="Professional real estate photography, drone/aerial shots, virtual staging, and video walkthroughs for Dallas-Fort Worth listings. Fast turnaround, MLS-ready photos.">
 <title>Refocus Media — Real Estate Photography</title>
 <link rel="canonical" href="https://refocus-media.com/">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Refocus Media — Real Estate Photography">
-<meta property="og:description" content="We deliver top-tier photo and video solutions for impactful marketing. Maximize your brand's visual appeal and leave a lasting impression with our professional and results-driven media solutions.">
+<meta property="og:description" content="Professional real estate photography, drone/aerial shots, virtual staging, and video walkthroughs for Dallas-Fort Worth listings. Fast turnaround, MLS-ready photos.">
 <meta property="og:url" content="https://refocus-media.com/">
 <meta property="og:image" content="https://refocus-media.com/images/listing-1.jpg">
 
@@ -25,7 +25,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "name": "Refocus Media",
-  "description": "We deliver top-tier photo and video solutions for impactful marketing. Maximize your brand's visual appeal and leave a lasting impression with our professional and results-driven media solutions.",
+  "description": "Professional real estate photography, drone/aerial shots, virtual staging, and video walkthroughs for Dallas-Fort Worth listings. Fast turnaround, MLS-ready photos.",
   "url": "https://refocus-media.com/",
   "areaServed": {
     "@type": "Place",
@@ -834,20 +834,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
 
   /* BOOKING embed */
+  /* Booking fills the whole viewport: the shade-inner is exactly one
+     window tall (height set by JS), a flex column, and the embed takes
+     all space left under the heading and runs flush to the bottom edge
+     — no padding, no min-heights, no measuring the iframe itself. */
+  #shade-booking{ box-sizing:border-box; border-bottom:none; transition: max-height 0.4s cubic-bezier(.4,0,.2,1), opacity 0.3s ease; }
+  #shade-booking.is-visible{ overflow:hidden; }
+  #shade-booking .shade-inner{
+    display:flex;
+    flex-direction:column;
+    box-sizing:border-box;
+    height:100vh;
+    padding-bottom:16px;
+  }
   .booking-embed{
     position:relative;
-    margin-top: 1.5rem;
-    width: 100%;
-    min-height: 600px;
-    border: 1px solid var(--hairline);
-    border-radius: 20px;
-    background: rgba(255,255,255,0.02);
-    overflow: hidden;
+    flex:1 1 auto;
+    min-height:0;
+    margin-top:1.5rem;
+    width:100%;
+    border:1px solid var(--hairline);
+    border-radius:20px;
+    background:#000000;
+    overflow:hidden;
   }
   .booking-embed iframe{
+    position:absolute;
+    inset:0;
     display:block;
     width:100%;
-    height:min(75vh, 700px); /* fallback before JS computes the exact fit */
+    height:100%;
     border:0;
     background:#000000;
   }
@@ -866,10 +882,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   .booking-fullscreen-btn:hover{
     background:rgba(0,0,0,0.8);
-  }
-  @media (max-width: 640px){
-    .booking-embed{ min-height:0; }
-    .booking-embed iframe{ height:min(38vh, 340px); }
   }
 
   /* CONTACT — form styling, used inside the Contact modal */
@@ -924,31 +936,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .field.invalid input,
   .field.invalid textarea{ border-color:#ef5b5b; }
 
+  .captcha-row{ display:flex; justify-content:center; margin-top:4px; max-width:100%; overflow:hidden; }
   .form-footer-row{
     display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:1.25rem;
-    flex-wrap:wrap;
+    flex-direction:column;
+    align-items:stretch;
+    gap:0.8rem;
     margin-top:0.35rem;
   }
   .newsletter-check{
     display:flex;
-    align-items:flex-start;
+    align-items:center;
+    justify-content:center;
     gap:0.55rem;
     font-size:0.76rem;
     line-height:1.4;
     color:var(--ink-muted);
     cursor:pointer;
-    max-width:280px;
   }
   .newsletter-check input{
-    margin-top:0.2rem;
     accent-color:var(--accent);
     flex:none;
     cursor:pointer;
+    margin:0;
   }
-  .submit-btn{ flex:none; white-space:nowrap; }
+  .submit-btn{ width:100%; white-space:nowrap; }
   .form-status{
     font-size:0.82rem;
     line-height:1.4;
@@ -1220,9 +1232,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .form-row{ grid-template-columns:1fr; }
     .form-row.name-row{ grid-template-columns:1fr 1fr; gap:0.6rem; }
     .form-row.name-row .field{ min-width:0; }
-    .form-footer-row{ align-items:flex-start; }
-    .submit-btn{ width:100%; }
-    .newsletter-check{ max-width:none; }
+    .newsletter-check{ font-size:0.72rem; }
     .contact-modal-panel .eyebrow,
     .contact-modal-panel h2{ display:none; }
   }
@@ -1231,6 +1241,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     html{ scroll-behavior:auto; }
   }
 </style>
+<script src="https://web3forms.com/client/script.js" async defer></script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -1477,6 +1488,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
+<div class="terms-modal" id="copyrightModal" aria-hidden="true">
+  <div class="terms-modal-backdrop" data-terms-close></div>
+  <div class="terms-modal-panel" role="dialog" aria-modal="true">
+    <button class="terms-modal-close" type="button" aria-label="Close" data-terms-close>&times;</button>
+    <div class="terms-iframe-wrap" id="copyrightIframeWrap">
+      <iframe data-src="https://docs.google.com/document/d/e/2PACX-1vT_-ah8QOgc2eBaAO4qkHhEV1LJkO8JoRenlHyHNzDMSRsHZoldtFwIN0qi5_NAGMc-WrzEcdsen85n/pub?embedded=true" title="Copyright Terms"></iframe>
+    </div>
+  </div>
+</div>
+
 <div class="contact-modal" id="contactModal" aria-hidden="true">
   <div class="contact-modal-backdrop" data-modal-close></div>
   <div class="contact-modal-panel" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
@@ -1510,10 +1531,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <textarea name="message" id="message" rows="3" required></textarea>
       </label>
 
+      <div class="captcha-row">
+        <div class="h-captcha" data-captcha="true" data-theme="dark"></div>
+      </div>
+
       <div class="form-footer-row">
         <label class="newsletter-check">
           <input type="checkbox" name="newsletter" id="newsletter">
-          <span>Also sign up for our newsletter<br>for updates and promo codes</span>
+          <span>Also sign up for our newsletter for updates and promo codes</span>
         </label>
         <button type="submit" class="glass-pill submit-btn is-incomplete" id="sendBtn">Send Message</button>
       </div>
@@ -1609,6 +1634,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var openKey = null; // the shade actually currently open/opening
 
     function heightFor(el){
+      // Booking is always exactly one window tall — never measured from
+      // content, which can lag behind a resize and leave it short/overflowing.
+      if (el.id === 'shade-booking') return window.innerHeight;
       // +2px buffer avoids a razor-thin 1px scrollbar caused by the
       // element's own border being outside what scrollHeight measures.
       return Math.min(el.scrollHeight + 2, window.innerHeight);
@@ -1642,7 +1670,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         // likely right after a fresh page load. Re-measures twice shortly
         // after opening and corrects the height if it was off.
         if (key === 'booking' && window.fitBookingIframe){
-          [300, 800].forEach(function(delay){
+          [300, 800, 1500].forEach(function(delay){
             window.setTimeout(function(){
               if (openKey !== 'booking') return;
               window.fitBookingIframe();
@@ -1712,6 +1740,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     window.addEventListener('resize', function(){
       if (!openKey) return;
       var el = shades[openKey];
+      if (openKey === 'booking' && window.fitBookingIframe) window.fitBookingIframe();
       el.style.maxHeight = heightFor(el) + 'px';
     });
   })();
@@ -1758,49 +1787,84 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   })();
 
-  // ---- Terms modal — opened from the "Terms" link in the footer ----
-  var termsModal = document.getElementById('termsModal');
-  var termsLinkBtn = document.getElementById('termsLinkBtn');
-
-  // Renders the embedded Google Doc at a wide, desktop-like native width
-  // (where its own layout looks correct) and scales the whole thing down
-  // to fit the actual panel width — Google's published-page layout doesn't
-  // reflow well on its own at narrow widths, so this sidesteps that rather
-  // than fighting it.
-  var termsWrap = document.getElementById('termsIframeWrap');
-  var termsIframe = termsWrap ? termsWrap.querySelector('iframe') : null;
+  // ---- Terms-style modals (Website Terms from the footer, Copyright Terms
+  // by direct link only). Each opens from a URL hash — /#websiteterms and
+  // /#copyrightterms — and the hash is cleared again on close.
+  //
+  // The embedded Google Doc is rendered at a wide, desktop-like native width
+  // (where its own layout looks correct) and scaled down to fit the panel;
+  // Google's published-page layout doesn't reflow well at narrow widths.
   var TERMS_NATIVE_WIDTH = 825;
-  function fitTermsIframe(){
-    if (!termsWrap || !termsIframe) return;
-    var availW = termsWrap.clientWidth;
-    var availH = termsWrap.clientHeight;
-    if (!availW || !availH) return;
-    var scale = availW / TERMS_NATIVE_WIDTH;
-    termsIframe.style.transform = 'scale(' + scale + ')';
-    termsIframe.style.height = (availH / scale) + 'px';
-  }
-  window.addEventListener('resize', fitTermsIframe);
+  var termsLinkBtn = document.getElementById('termsLinkBtn');
+  var termsModals = [
+    { hash: 'websiteterms',   modal: document.getElementById('termsModal'),     wrap: document.getElementById('termsIframeWrap') },
+    { hash: 'copyrightterms', modal: document.getElementById('copyrightModal'), wrap: document.getElementById('copyrightIframeWrap') }
+  ].filter(function(m){ return m.modal && m.wrap; });
 
-  function openTermsModal(){
-    if (!termsModal) return;
-    termsModal.classList.add('is-open');
-    termsModal.setAttribute('aria-hidden', 'false');
-    window.setTimeout(fitTermsIframe, 50);
+  function fitTermsIframe(m){
+    var iframe = m.wrap.querySelector('iframe');
+    var availW = m.wrap.clientWidth;
+    var availH = m.wrap.clientHeight;
+    if (!iframe || !availW || !availH) return;
+    var scale = availW / TERMS_NATIVE_WIDTH;
+    iframe.style.transform = 'scale(' + scale + ')';
+    iframe.style.height = (availH / scale) + 'px';
   }
-  function closeTermsModal(){
-    if (!termsModal) return;
-    termsModal.classList.remove('is-open');
-    termsModal.setAttribute('aria-hidden', 'true');
+  function fitAllTerms(){
+    termsModals.forEach(function(m){
+      if (m.modal.classList.contains('is-open')) fitTermsIframe(m);
+    });
   }
+  window.addEventListener('resize', fitAllTerms);
+
+  function openTermsByHash(hash){
+    termsModals.forEach(function(m){
+      var open = m.hash === hash;
+      if (open){
+        var iframe = m.wrap.querySelector('iframe');
+        if (iframe && !iframe.getAttribute('src') && iframe.dataset.src){
+          iframe.setAttribute('src', iframe.dataset.src);
+        }
+      }
+      m.modal.classList.toggle('is-open', open);
+      m.modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+      if (open) window.setTimeout(function(){ fitTermsIframe(m); }, 50);
+    });
+  }
+  function closeTerms(){
+    var wasOpen = termsModals.some(function(m){ return m.modal.classList.contains('is-open'); });
+    if (!wasOpen) return;
+    openTermsByHash(null);
+    var h = window.location.hash.replace('#', '');
+    if (termsModals.some(function(m){ return m.hash === h; })){
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }
+
   if (termsLinkBtn){
-    termsLinkBtn.addEventListener('click', openTermsModal);
+    termsLinkBtn.addEventListener('click', function(){
+      history.replaceState(null, '', '#websiteterms');
+      openTermsByHash('websiteterms');
+    });
   }
   document.querySelectorAll('[data-terms-close]').forEach(function(el){
-    el.addEventListener('click', closeTermsModal);
+    el.addEventListener('click', closeTerms);
   });
   window.addEventListener('keydown', function(e){
-    if (e.key === 'Escape') closeTermsModal();
+    if (e.key === 'Escape') closeTerms();
   });
+  window.addEventListener('hashchange', function(){
+    var h = window.location.hash.replace('#', '');
+    openTermsByHash(termsModals.some(function(m){ return m.hash === h; }) ? h : null);
+  });
+  (function(){
+    function initial(){
+      var h = window.location.hash.replace('#', '');
+      if (termsModals.some(function(m){ return m.hash === h; })) openTermsByHash(h);
+    }
+    if (document.readyState === 'complete') initial();
+    else window.addEventListener('load', initial);
+  })();
 
   // ---- Contact modal — opened from the "Contact" item in the nav pill ----
   var contactModal = document.getElementById('contactModal');
@@ -1894,23 +1958,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!embedWrap || !shadeInner || !iframe) return;
 
     function fit(){
-      var topOffset = embedWrap.getBoundingClientRect().top;
-      var paddingBottom = parseFloat(getComputedStyle(shadeInner).paddingBottom) || 0;
-      var bottomGap = 12; // intentional breathing room so the iframe never
-                          // touches the very bottom edge — reaching all the
-                          // way down seems to be what triggers the shade's
-                          // own internal scrollbar by a sub-pixel amount.
-      var availableHeight = window.innerHeight - topOffset - paddingBottom - bottomGap;
-      iframe.style.height = Math.max(availableHeight, 300) + 'px';
+      // Only job left: make the shade's inner column exactly one window
+      // tall. CSS flexbox hands the iframe everything under the heading.
+      shadeInner.style.height = window.innerHeight + 'px';
     }
 
     window.fitBookingIframe = fit;
 
     var resizeTimer;
-    window.addEventListener('resize', function(){
+    function scheduleRefit(){
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(fit, 100);
-    });
+    }
+    window.addEventListener('resize', scheduleRefit);
+
+    // ResizeObserver on <body> catches size changes a plain 'resize' event
+    // can miss — e.g. Safari's toolbar/chrome settling to its final height
+    // slightly after the page loads, which can otherwise leave the iframe
+    // sized against a stale window.innerHeight reading.
+    if (window.ResizeObserver){
+      new ResizeObserver(scheduleRefit).observe(document.body);
+    }
+
     fit();
   })();
 
@@ -2294,6 +2363,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     );
   }
 
+  function captchaToken(){
+    var el = form && form.querySelector('textarea[name="h-captcha-response"], input[name="h-captcha-response"]');
+    return el ? el.value : '';
+  }
+
   function refreshSendState(){
     if (sendBtn) sendBtn.classList.toggle('is-incomplete', !formIsComplete());
   }
@@ -2368,6 +2442,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       if (!allValid) return;
 
+      if (!captchaToken()){
+        setStatus('Please confirm you\'re human using the checkbox above.', 'error');
+        return;
+      }
+
       var originalBtnText = sendBtn.textContent;
       sendBtn.textContent = 'Sending...';
       sendBtn.disabled = true;
@@ -2379,6 +2458,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       formData.append('phone', phoneInput.value.trim());
       formData.append('message', messageInput.value.trim());
       formData.append('subject', 'New contact form submission — Refocus Media');
+      formData.append('h-captcha-response', captchaToken());
 
       fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -2390,6 +2470,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             if (newsletterCheckbox.checked) submitToBrevo();
             setStatus('Thanks — your message has been sent. We\'ll be in touch soon.', 'success');
             form.reset();
+            if (window.hcaptcha) { try { window.hcaptcha.reset(); } catch(e){} }
             refreshSendState();
           } else {
             setStatus('Something went wrong sending your message. Please try again, or reach out directly.', 'error');
