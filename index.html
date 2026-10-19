@@ -1040,6 +1040,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     pointer-events:none;
     transition:opacity 0.2s ease;
   }
+  /* Closed modals must not catch the mouse: .glass-pill sets pointer-events:auto,
+     which overrides the inherited none and left an invisible button live. */
+  .contact-modal:not(.is-open),
+  .contact-modal:not(.is-open) *,
+  .terms-modal:not(.is-open),
+  .terms-modal:not(.is-open) *{ pointer-events:none !important; }
   .contact-modal.is-open{
     opacity:1;
     pointer-events:auto;
